@@ -124,6 +124,9 @@ Although the analyses post transformation was much stronger for regression, it s
 ```{r}
 library(ggplot2)
 library(dplyr)
+ebay_transformed <- ebay_transformed %>%  
+  mutate( obs_index = row_number(),
+  h = hatvalues(fit_full), D = cooks.distance(fit_full))  
 
 # Define high leverage points
 leverage_threshold <- 2 * 7 / nrow(ebay_transformed)
