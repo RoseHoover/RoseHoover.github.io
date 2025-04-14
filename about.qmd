@@ -1,0 +1,9 @@
+---
+title: "About"
+---
+
+This is my website! I am a senior at Mount Holyoke College majoring in Data Science with a minor in Economics. I am passionate about data-driven problem-solving and sharing transparent findings.
+
+```{r}
+1 + 1
+```
