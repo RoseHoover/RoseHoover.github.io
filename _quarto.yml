@@ -15,9 +15,14 @@ website:
 
 format:
   html:
-    theme: cosmo
+    theme: quartz
+    mainfont: arial
     css: styles.css
     toc: true
+    fontsize: 1.5rem
+    fontcolor: "#A2D9CE"
+    linkcolor: "#17202A"
+    monofont: courier new
 
 editor: visual
 
