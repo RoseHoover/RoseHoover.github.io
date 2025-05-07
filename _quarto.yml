@@ -3,26 +3,26 @@ project:
   output-dir: docs
 
 website:
-  title: "RoseHoover.github.io"
+  title: "Rose Hoover's Website"
   navbar:
     left:
       - href: index.qmd
         text: Home
       - href: about.qmd
-        text: About Me!
+        text: About Me
       - href: test.qmd
         text: Stat244
 
 format:
   html:
-    theme: quartz
+    theme: Lumen
     mainfont: arial
     css: styles.css
     toc: true
     fontsize: 1.5rem
-    fontcolor: "#A2D9CE"
-    linkcolor: "#17202A"
     monofont: courier new
+    code-fold: true
+    code-summary: "Show Code"
 
 editor: visual
 

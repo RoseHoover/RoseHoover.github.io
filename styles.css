@@ -1,1 +1,19 @@
 /* css styles */
+/* Change page background */
+body {
+  background-color: #FFF0F5;
+}
+
+/*  header colors */
+h1, h2, h3, h4, h5, h6 {
+  color: #C71585;
+}
+
+/*  background and text */
+.navbar {
+  background-color: #FFB6C1 !important; /* light pink */
+}
+
+.navbar .nav-link {
+  color: white !important;
+}

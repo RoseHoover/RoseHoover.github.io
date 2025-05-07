@@ -1,5 +1,246 @@
 ---
-title: "test.qmd"
+title: "Stat 244-SC"
 ---
 
-poop!
+Attached is a (TO BE COMPLETED) project from my STAT 244-Statistical Computation course at Mount Holyoke College.
+
+## Introduction
+
+This project investigates the factors that influence a newborn's weight using a dataset that includes information on parental age, smoking status, baby sex, and whether the birth was premature. The goal is to explore relationships between these predictors and birth weight, using visualizations and statistical analysis in R.
+
+------------------------------------------------------------------------
+
+```{R, message=FALSE,results='hide', warning=FALSE}
+library(tidyverse)
+library(tidymodels)
+library(cluster)
+library(readxl)
+library(readr)
+library(purrr)
+library(dplyr)
+library(ggplot2)
+library(gridExtra)
+library(gmodels)
+library(factoextra)
+```
+
+## Loading in Data
+
+```{r}
+Births <- read.csv("births.csv")
+births_clean <- Births %>%
+  mutate(
+    smoke = as.factor(smoke),
+    sex_baby = as.factor(sex_baby),
+    premature = as.factor(premature)
+  )
+births_clean <- births_clean %>%
+  filter(!is.na(f_age), !is.na(visits), !is.na(gained))
+
+head(births_clean)
+
+```
+
+## Visual summary of outcome (weight):
+
+```{r}
+ggplot(births_clean, aes(x = weight)) +
+  geom_histogram(binwidth = 0.5, color = "black") +
+  labs(title = "Distribution of Baby Birth Weights", x = "birth weight", y = "count") +
+  theme_minimal()
+```
+
+## Visualization: Birth Weight by Smoking Status
+
+```{r}
+ggplot(births_clean, aes(x = smoke, y = weight)) + geom_boxplot(fill = "lightblue") + labs( title = "Birth Weight by Smoking Status", x = "Mother Smoked During Pregnancy", y = "Birth Weight (pounds)" ) + theme_minimal()
+```
+
+We can see that right off the bat, babies born to smoking mothers tend to weigh less than those born to nonsmoking mothers. We do see nonsmoker group has a multiple low outliers and the smoker group also has one low outlier. Although normally outliers may be removed, I am not rushing to do so as preemie babies are usually underweight, and premature status is a variable of interest. I feel as though those points can be elaborated, and deleting them will remove important story telling portions.
+
+## Looking at gender as a Predictor:
+
+```{r}
+births_clean %>%
+  count(sex_baby) %>%
+  ggplot(aes(x = sex_baby, y = n, fill = sex_baby)) +
+  geom_col() +
+  labs(title = "Count of Babies Sex", x = "gender", y = "count") +
+  theme_minimal()
+
+```
+
+## Establishment of Models
+
+To isolate the power of each predictor we will need a "full" model and one with more selective variables to see impacts. M1 will be full and M2 is the more selective variables of interest
+
+Model 1 : weight \~ smoke + f_age + m_age + gained + sex_baby + premature
+
+Model 2: weight \~ smoke+ m_age+gained+premature
+
+```{r}
+#For Reproducibility
+set.seed(244)
+
+# Define linear model specification
+lm_spec <- linear_reg() %>%
+  set_engine("lm")
+
+# Perform 10-fold cross-validation using the births_clean data
+births_model1_cv <- lm_spec %>%
+  # fit_resamples() function is for fitting on folds
+  fit_resamples(
+    # Specify the relationship (Full model)
+    weight ~ smoke + f_age + m_age + gained + sex_baby +premature,
+    
+    # vfold_cv makes CV folds randomly from births_clean data set
+    resamples = vfold_cv(births_clean, v = 10),
+    
+    # Specify the error metrics (MAE, square root MSE, R^2)
+    metrics = metric_set(mae, rmse, rsq)
+  )
+
+# Collect the average performance metrics across folds
+births_model1_cv %>% collect_metrics()
+```
+
+```{r}
+#I took this code from Lab 7 Intro to CV
+
+#For Reproducibility
+set.seed(244)
+
+# Define linear model specification
+lm_spec <- linear_reg() %>%
+  set_engine("lm")
+
+# Perform 10-fold cross-validation using the births_clean data
+births_model2_cv <- lm_spec %>%
+  # fit_resamples() function is for fitting on folds
+  fit_resamples(
+    # Specify the relationship 
+        weight ~ smoke+ m_age+gained+premature,
+    
+    # vfold_cv makes CV folds randomly from births_clean data set
+    resamples = vfold_cv(births_clean, v = 10),
+    
+    # Specify the error metrics (MAE, square root MSE, R^2)
+    metrics = metric_set(mae, rmse, rsq)
+  )
+
+# Collect the average performance metrics across folds
+births_model2_cv %>% collect_metrics()
+```
+
+# Using k=5 and LOOCV
+
+```{r}
+# 5-fold CV using same code as k=10 for model 1 (full)
+set.seed(244)
+births_model1_5 <- lm_spec %>%
+  fit_resamples(
+    weight ~ smoke + f_age + m_age + gained + sex_baby +premature,
+    resamples = vfold_cv(births_clean, v = 5),
+    metrics = metric_set(mae, rmse, rsq)
+  )
+births_model1_5 %>% collect_metrics()
+
+```
+
+```{r}
+# 5-fold CV using same code as k=10 for model 2 
+set.seed(244)
+births_model2_5 <- lm_spec %>%
+  fit_resamples(
+    weight ~ smoke+ m_age+gained +premature,
+    resamples = vfold_cv(births_clean, v = 5),
+    metrics = metric_set(mae, rmse, rsq)
+  )
+births_model2_5 %>% collect_metrics()
+
+```
+
+```{r}
+#I removed the rsq because when i included it, it ran me like an endlesss loop
+births_model1_loocv <- lm_spec %>%
+  fit_resamples(
+    weight ~ smoke + f_age + m_age + gained + sex_baby+premature,
+    resamples = vfold_cv(births_clean, v = nrow(births_clean)),
+    metrics = metric_set(mae, rmse)
+  )
+births_model1_loocv %>% collect_metrics()
+
+```
+
+```{r}
+#I removed the rsq because when i included it, it ran me like an endlesss loop
+births_model1_loocv <- lm_spec %>%
+  fit_resamples(
+    weight ~ smoke + f_age + m_age + gained + sex_baby+premature,
+    resamples = vfold_cv(births_clean, v = nrow(births_clean)),
+    metrics = metric_set(mae, rmse)
+  )
+births_model1_loocv %>% collect_metrics()
+
+```
+
+```{r}
+#I removed the rsq because when i included it, it ran me like an endlesss loop
+births_model2_loocv <- lm_spec %>%
+  fit_resamples(
+    weight ~ smoke+ m_age+gained+premature,
+    resamples = vfold_cv(births_clean, v = nrow(births_clean)),
+    metrics = metric_set(mae, rmse)
+  )
+births_model2_loocv %>% collect_metrics()
+
+```
+
+When we utilized k=10 or k=5, Model 1 appears to be the preferred model as it has consistently lower MSE and RMSE than Model 2 in the same scenarios. However when we use the LOOCV method Model 2 has a (minorly) lower MAE and MSE but it is 0.06785 to 0.06678, which feels like a minor difference.
+
+## K-Means
+
+I thought K-means would be an interesting to see what the clusters that are formed are and what variables are driving predictive power
+
+K-means is an unsupervised learning algorithm that partitions data into K distinct clusters. The algorithm works by minimizing the the distance between clusters by their sum of squares. The most common way to implement it is by centroids which is the total distance between each point and the center of its assigned cluster.
+
+```{r}
+#This code was adapted from K-means Lab 11
+births_reduced <- births_clean %>%
+  filter(!is.na(weight), !is.na(m_age), !is.na(f_age), !is.na(gained)) %>%
+  select(weight, m_age, f_age, gained)
+
+ggplot(births_reduced, aes(x = gained, y = weight)) +
+  geom_point() +
+  labs(title = "Initial Visualization of Baby Weight vs Weight Gained") +
+  theme_minimal()
+
+```
+
+```{r}
+set.seed(244)
+
+# Run the K-means algorithm
+kmeans_births <- kmeans(scale(births_reduced), centers = 2)
+
+births_reduced %>%
+  mutate(kmeans_cluster = as.factor(kmeans_births$cluster)) %>%
+  ggplot(aes(x = gained, y = weight, color = kmeans_cluster)) +
+  geom_point(size = 3) +
+  theme(legend.position = "none") +
+  labs(title = "K-means with K = 2 (Births Data)",
+       x = "Weight Gained (lbs)",
+       y = "Birth Weight (lbs)") +
+  theme_minimal()
+
+```
+
+```{r}
+library(factoextra)
+
+fviz_nbclust(scale(births_reduced), kmeans, method = "silhouette") +
+  labs(title = "Silhouette Method: Choosing K (Births Data)")
+
+```
+
+I used the silhouette method to vizualize the ideal number of k clusters. This method evaluates how well each point fits within its assigned cluster compared to other clusters. The point that was highest at K=2, which indicates that two clusters provide the most meaningful separation in the data. Larger values of K did not significantly improve the structure, and sometimes even lowered cohesion.
