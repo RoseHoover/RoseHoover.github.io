@@ -1,0 +1,1 @@
+"0","ggplot(births_clean, aes(x = smoke, y = weight)) + geom_boxplot(fill = ""lightblue"") + labs( title = ""Birth Weight by Smoking Status"", x = ""Mother Smoked During Pregnancy"", y = ""Birth Weight (pounds)"" ) + theme_minimal()"
