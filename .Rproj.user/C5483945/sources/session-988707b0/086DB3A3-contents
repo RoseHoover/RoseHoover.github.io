@@ -206,7 +206,7 @@ births_model2_loocv %>% collect_metrics()
 
 Model 2 achieved lower MAE and errors across all stages, indicating a better fit to the training data. However, its 10-fold CV MAE was only marginally better than Model 1, with slightly lower standard error. Despite the slight risk of overfitting, Model 2 was chosen due to its stronger explanatory capacity and meaningful inclusion of health-related features. This reinforces the benefit of including additional predictors such as maternal age, weight gain, and premature status in improving model accuracy.
 
-## K-Means
+## K-Means:
 
 I thought K-means would be an interesting to see what the clusters that are formed are and what variables are driving predictive power
 

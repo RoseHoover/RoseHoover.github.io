@@ -1,0 +1,28 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Rose Hoover's Website"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: about.qmd
+        text: About Me
+      - href: test.qmd
+        text: Stat244
+
+format:
+  html:
+    theme: Lumen
+    mainfont: arial
+    css: styles.css
+    toc: true
+    fontsize: 1.5rem
+    monofont: courier new
+    code-fold: true
+    code-summary: "Show Code"
+
+editor: visual
+

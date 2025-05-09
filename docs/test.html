@@ -172,14 +172,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#loading-in-data" id="toc-loading-in-data" class="nav-link" data-scroll-target="#loading-in-data">Loading in Data</a></li>
   <li><a href="#visual-summary-of-outcome-weight" id="toc-visual-summary-of-outcome-weight" class="nav-link" data-scroll-target="#visual-summary-of-outcome-weight">Visual summary of outcome (weight):</a></li>
-  <li><a href="#visualization-birth-weight-by-smoking-status" id="toc-visualization-birth-weight-by-smoking-status" class="nav-link" data-scroll-target="#visualization-birth-weight-by-smoking-status">Visualization: Birth Weight by Smoking Status</a></li>
+  <li><a href="#visualization-of-birth-weight-by-smoking-status" id="toc-visualization-of-birth-weight-by-smoking-status" class="nav-link" data-scroll-target="#visualization-of-birth-weight-by-smoking-status">Visualization of Birth Weight by Smoking Status:</a></li>
   <li><a href="#looking-at-gender-as-a-predictor" id="toc-looking-at-gender-as-a-predictor" class="nav-link" data-scroll-target="#looking-at-gender-as-a-predictor">Looking at gender as a Predictor:</a></li>
   <li><a href="#establishment-of-models" id="toc-establishment-of-models" class="nav-link" data-scroll-target="#establishment-of-models">Establishment of Models</a></li>
-  <li><a href="#using-k5-and-loocv" id="toc-using-k5-and-loocv" class="nav-link" data-scroll-target="#using-k5-and-loocv">Using k=5 and LOOCV</a>
-  <ul class="collapse">
-  <li><a href="#k-means" id="toc-k-means" class="nav-link" data-scroll-target="#k-means">K-Means</a></li>
+  <li><a href="#using-k5-and-loocv" id="toc-using-k5-and-loocv" class="nav-link" data-scroll-target="#using-k5-and-loocv">Using k=5 and LOOCV</a></li>
+  <li><a href="#k-means" id="toc-k-means" class="nav-link" data-scroll-target="#k-means">K-Means:</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion:</a></li>
-  </ul></li>
   </ul>
 </nav>
     </div>
@@ -270,8 +268,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p>The data is fairly normally distributed with a slight left skew</p>
 </section>
-<section id="visualization-birth-weight-by-smoking-status" class="level2">
-<h2 class="anchored" data-anchor-id="visualization-birth-weight-by-smoking-status">Visualization: Birth Weight by Smoking Status</h2>
+<section id="visualization-of-birth-weight-by-smoking-status" class="level2">
+<h2 class="anchored" data-anchor-id="visualization-of-birth-weight-by-smoking-status">Visualization of Birth Weight by Smoking Status:</h2>
 <div class="cell">
 <details>
 <summary>Show Code</summary>
@@ -382,8 +380,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="using-k5-and-loocv" class="level1">
-<h1>Using k=5 and LOOCV</h1>
+<section id="using-k5-and-loocv" class="level2">
+<h2 class="anchored" data-anchor-id="using-k5-and-loocv">Using k=5 and LOOCV</h2>
 <div class="cell">
 <details>
 <summary>Show Code</summary>
@@ -489,8 +487,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 <p>Model 2 achieved lower MAE and errors across all stages, indicating a better fit to the training data. However, its 10-fold CV MAE was only marginally better than Model 1, with slightly lower standard error. Despite the slight risk of overfitting, Model 2 was chosen due to its stronger explanatory capacity and meaningful inclusion of health-related features. This reinforces the benefit of including additional predictors such as maternal age, weight gain, and premature status in improving model accuracy.</p>
+</section>
 <section id="k-means" class="level2">
-<h2 class="anchored" data-anchor-id="k-means">K-Means</h2>
+<h2 class="anchored" data-anchor-id="k-means">K-Means:</h2>
 <p>I thought K-means would be an interesting to see what the clusters that are formed are and what variables are driving predictive power</p>
 <p>K-means is an unsupervised learning algorithm that partitions data into K distinct clusters. The algorithm works by minimizing the the distance between clusters by their sum of squares. The most common way to implement it is by centroids which is the total distance between each point and the center of its assigned cluster.</p>
 <div class="cell">
@@ -553,7 +552,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Clustering analysis revealed that maternal and birth characteristics naturally fall into two groups, primarily differentiated by health-related factors like weight gain and birth weight. The findings emphasize the value of integrating both supervised and unsupervised learning to interpret real-world data more holistically.</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
