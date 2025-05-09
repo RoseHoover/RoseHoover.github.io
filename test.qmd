@@ -54,7 +54,7 @@ ggplot(births_clean, aes(x = weight)) +
 
 The data is fairly normally distributed with a slight left skew
 
-## Visualization: Birth Weight by Smoking Status
+## Visualization of Birth Weight by Smoking Status:
 
 ```{r}
 ggplot(births_clean, aes(x = smoke, y = weight)) + geom_boxplot(fill = "lightblue") + labs( title = "Birth Weight by Smoking Status", x = "Mother Smoked During Pregnancy", y = "Birth Weight (pounds)" ) + theme_minimal()
@@ -140,7 +140,7 @@ births_model2_cv <- lm_spec %>%
 births_model2_cv %>% collect_metrics()
 ```
 
-# Using k=5 and LOOCV
+## Using k=5 and LOOCV
 
 ```{r}
 # 5-fold CV using same code as k=10 for model 1 (full)
